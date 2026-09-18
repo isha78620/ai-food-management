@@ -1,4 +1,11 @@
 import { useEffect, useState } from "react";
+import {
+  BarChart3,
+  IndianRupee,
+  CheckCircle2,
+  Truck,
+  RefreshCw,
+} from "lucide-react";
 import api from "../services/api";
 
 interface Summary {
@@ -157,7 +164,8 @@ function Analytics() {
           className="analytics-refresh"
           onClick={loadAnalytics}
         >
-          ↻ Refresh
+          <RefreshCw size={18} />
+          Refresh
         </button>
       </div>
 
@@ -166,7 +174,9 @@ function Analytics() {
         <div className="analytics-summary-grid">
 
           <div className="analytics-card summary-card">
-            <div className="summary-icon orders-icon">▦</div>
+              <div className="summary-icon orders-icon">
+                <BarChart3 size={22} />
+              </div>
             <div>
               <span>Total Orders</span>
               <strong>{summary.totalOrders}</strong>
@@ -174,7 +184,9 @@ function Analytics() {
           </div>
 
           <div className="analytics-card summary-card">
-            <div className="summary-icon revenue-icon">₹</div>
+            <div className="summary-icon revenue-icon">
+              <IndianRupee size={22} />
+            </div>
             <div>
               <span>Total Revenue</span>
               <strong>{formatMoney(summary.totalRevenue)}</strong>
@@ -182,7 +194,9 @@ function Analytics() {
           </div>
 
           <div className="analytics-card summary-card">
-            <div className="summary-icon completed-icon">✓</div>
+            <div className="summary-icon completed-icon">
+              <CheckCircle2 size={22} />
+            </div>
             <div>
               <span>Completed</span>
               <strong>{summary.completedOrders}</strong>
@@ -190,7 +204,9 @@ function Analytics() {
           </div>
 
           <div className="analytics-card summary-card">
-            <div className="summary-icon delivery-icon">▣</div>
+           <div className="summary-icon delivery-icon">
+              <Truck size={22} />
+            </div>
             <div>
               <span>Total Deliveries</span>
               <strong>
@@ -491,4 +507,4 @@ function Analytics() {
   );
 }
 
-export default Analytics;
+export default Analytics; 

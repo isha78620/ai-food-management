@@ -1,17 +1,18 @@
-import { 
-  LayoutDashboard, 
-  ShoppingBag, 
-  Store, 
-  ChefHat, 
-  Truck, 
-  Package, 
-  Carrot, 
-  MessageSquare, 
+import {
+  LayoutDashboard,
+  ShoppingBag,
+  Store,
+  Utensils,
+  ChefHat,
+  Truck,
+  Package,
+  Carrot,
+  MessageSquare,
   Bot,
+  Settings,
+  LogOut,
+  X,
   BarChart3,
-  Settings, 
-  LogOut, 
-  X, 
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
@@ -37,6 +38,12 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
       name: "Restaurants",
       path: "/restaurants",
       icon: Store,
+    },
+
+    {
+      name: "Foods",
+      icon: Utensils,
+      path: "/foods",
     },
     {
       name: "Kitchen",

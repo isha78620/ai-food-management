@@ -6,10 +6,11 @@ import {
   Clock,
   CheckCircle,
   Package,
-  XCircle,
   Eye,
   X,
   MapPin,
+  PackageCheck,
+  ArrowRight,
 } from "lucide-react";
 
 import api from "../services/api";
@@ -40,7 +41,16 @@ interface Delivery {
 
   createdAt?: string;
   created_at?: string;
+
+  assignedAt?: string;
+  updatedAt?: string;
 }
+
+type DeliveryStatus =
+  | "assigned"
+  | "picked_up"
+  | "out_for_delivery"
+  | "delivered";
 
 function Deliveries() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
@@ -55,6 +65,9 @@ function Deliveries() {
 
   const [showModal, setShowModal] = useState(false);
 
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState("");
+
   /* =========================
      FETCH DELIVERIES
      ========================= */
@@ -66,10 +79,7 @@ function Deliveries() {
 
       const response = await api.get("/api/admin/deliveries");
 
-      console.log(
-        "Deliveries API Response:",
-        response.data
-      );
+      console.log("Deliveries API Response:", response.data);
 
       const data = Array.isArray(response.data)
         ? response.data
@@ -78,15 +88,25 @@ function Deliveries() {
           [];
 
       setDeliveries(data);
-    } catch (err) {
-      console.error(
-        "Deliveries API Error:",
-        err
-      );
 
-      setError(
-        "Unable to load delivery data."
-      );
+      // Keep selected delivery updated after refresh
+      if (selectedDelivery) {
+        const selectedId =
+          selectedDelivery._id || selectedDelivery.id;
+
+        const updatedDelivery = data.find(
+          (delivery: Delivery) =>
+            (delivery._id || delivery.id) === selectedId
+        );
+
+        if (updatedDelivery) {
+          setSelectedDelivery(updatedDelivery);
+        }
+      }
+    } catch (err) {
+      console.error("Deliveries API Error:", err);
+
+      setError("Unable to load delivery data.");
     } finally {
       setLoading(false);
     }
@@ -100,8 +120,23 @@ function Deliveries() {
      HELPERS
      ========================= */
 
-  const getStatus = (delivery: Delivery) =>
-    delivery.status?.toLowerCase() || "pending";
+  const getStatus = (delivery: Delivery): DeliveryStatus => {
+    const status = delivery.status?.toLowerCase();
+
+    if (
+      status === "assigned" ||
+      status === "picked_up" ||
+      status === "out_for_delivery" ||
+      status === "delivered"
+    ) {
+      return status;
+    }
+
+    return "assigned";
+  };
+
+  const getDeliveryId = (delivery: Delivery) =>
+    delivery._id || delivery.id || "";
 
   const getCustomer = (delivery: Delivery) =>
     delivery.customerName ||
@@ -110,8 +145,6 @@ function Deliveries() {
 
   const getOrderId = (delivery: Delivery) =>
     delivery.orderId ||
-    delivery._id ||
-    delivery.id ||
     "N/A";
 
   const getToken = (delivery: Delivery) =>
@@ -119,9 +152,7 @@ function Deliveries() {
     delivery.token ||
     getOrderId(delivery).slice(-5);
 
-  const getDeliveryPerson = (
-    delivery: Delivery
-  ) =>
+  const getDeliveryPerson = (delivery: Delivery) =>
     delivery.deliveryPersonName ||
     delivery.deliveryPerson ||
     delivery.driverName ||
@@ -141,19 +172,177 @@ function Deliveries() {
   const getDate = (delivery: Delivery) => {
     const date =
       delivery.createdAt ||
-      delivery.created_at;
+      delivery.created_at ||
+      delivery.assignedAt;
 
     if (!date) return "N/A";
 
-    return new Date(date).toLocaleString(
-      "en-IN",
-      {
-        day: "2-digit",
-        month: "short",
-        hour: "2-digit",
-        minute: "2-digit",
+    return new Date(date).toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  /* =========================
+     STATUS LABEL
+     ========================= */
+
+  const statusLabel = (status: string) => {
+    switch (status) {
+      case "assigned":
+        return "Assigned";
+
+      case "picked_up":
+        return "Picked Up";
+
+      case "out_for_delivery":
+        return "Out for Delivery";
+
+      case "delivered":
+        return "Delivered";
+
+      default:
+        return status;
+    }
+  };
+
+  /* =========================
+     STATUS ICON
+     ========================= */
+
+  const StatusIcon = ({
+    status,
+  }: {
+    status: string;
+  }) => {
+    switch (status) {
+      case "assigned":
+        return <Clock size={15} />;
+
+      case "picked_up":
+        return <PackageCheck size={15} />;
+
+      case "out_for_delivery":
+        return <Truck size={15} />;
+
+      case "delivered":
+        return <CheckCircle size={15} />;
+
+      default:
+        return <Clock size={15} />;
+    }
+  };
+
+  /* =========================
+     NEXT STATUS
+     ========================= */
+
+  const getNextStatus = (
+    status: DeliveryStatus
+  ): DeliveryStatus | null => {
+    switch (status) {
+      case "assigned":
+        return "picked_up";
+
+      case "picked_up":
+        return "out_for_delivery";
+
+      case "out_for_delivery":
+        return "delivered";
+
+      case "delivered":
+        return null;
+
+      default:
+        return null;
+    }
+  };
+
+  /* =========================
+     UPDATE DELIVERY STATUS
+     ========================= */
+
+  const updateDeliveryStatus = async (
+    delivery: Delivery,
+    newStatus: DeliveryStatus
+  ) => {
+    const deliveryId = getDeliveryId(delivery);
+
+    if (!deliveryId) {
+      setError("Delivery ID is missing.");
+      return;
+    }
+
+    try {
+      setUpdatingId(deliveryId);
+      setError("");
+      setStatusMessage("");
+
+      const response = await api.patch(
+        `/api/deliveries/${deliveryId}/status`,
+        null,
+        {
+          params: {
+            status: newStatus,
+          },
+        }
+      );
+
+      console.log(
+        "Delivery Status Update Response:",
+        response.data
+      );
+
+      // Update local delivery list immediately
+      setDeliveries((previousDeliveries) =>
+        previousDeliveries.map((item) =>
+          getDeliveryId(item) === deliveryId
+            ? {
+                ...item,
+                status: newStatus,
+              }
+            : item
+        )
+      );
+
+      // Update selected delivery if modal is open
+      if (
+        selectedDelivery &&
+        getDeliveryId(selectedDelivery) === deliveryId
+      ) {
+        setSelectedDelivery({
+          ...selectedDelivery,
+          status: newStatus,
+        });
       }
-    );
+
+      setStatusMessage(
+        `Delivery status updated to ${statusLabel(
+          newStatus
+        )}.`
+      );
+
+      // Refresh from backend
+      await fetchDeliveries();
+    } catch (err: any) {
+      console.error(
+        "Delivery Status Update Error:",
+        err
+      );
+
+      const backendMessage =
+        err?.response?.data?.detail;
+
+      setError(
+        typeof backendMessage === "string"
+          ? backendMessage
+          : "Unable to update delivery status."
+      );
+    } finally {
+      setUpdatingId(null);
+    }
   };
 
   /* =========================
@@ -178,8 +367,7 @@ function Deliveries() {
           .toLowerCase()
           .includes(text);
 
-      const status =
-        getStatus(delivery);
+      const status = getStatus(delivery);
 
       const matchesStatus =
         statusFilter === "all" ||
@@ -200,81 +388,26 @@ function Deliveries() {
      COUNTS
      ========================= */
 
-  const pendingCount = deliveries.filter(
+  const assignedCount = deliveries.filter(
     (delivery) =>
-      getStatus(delivery) === "pending"
+      getStatus(delivery) === "assigned"
+  ).length;
+
+  const pickedUpCount = deliveries.filter(
+    (delivery) =>
+      getStatus(delivery) === "picked_up"
   ).length;
 
   const outForDeliveryCount =
-    deliveries.filter((delivery) =>
-      [
-        "out_for_delivery",
-        "out-for-delivery",
-        "out for delivery",
-      ].includes(getStatus(delivery))
+    deliveries.filter(
+      (delivery) =>
+        getStatus(delivery) === "out_for_delivery"
     ).length;
 
   const deliveredCount = deliveries.filter(
     (delivery) =>
       getStatus(delivery) === "delivered"
   ).length;
-
-  const cancelledCount =
-    deliveries.filter(
-      (delivery) =>
-        getStatus(delivery) === "cancelled"
-    ).length;
-
-  /* =========================
-     STATUS LABEL
-     ========================= */
-
-  const statusLabel = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "Pending";
-
-      case "out_for_delivery":
-      case "out-for-delivery":
-      case "out for delivery":
-        return "Out for Delivery";
-
-      case "delivered":
-        return "Delivered";
-
-      case "cancelled":
-        return "Cancelled";
-
-      default:
-        return status;
-    }
-  };
-
-  /* =========================
-     STATUS ICON
-     ========================= */
-
-  const StatusIcon = ({
-    status,
-  }: {
-    status: string;
-  }) => {
-    switch (status) {
-      case "delivered":
-        return <CheckCircle size={15} />;
-
-      case "cancelled":
-        return <XCircle size={15} />;
-
-      case "out_for_delivery":
-      case "out-for-delivery":
-      case "out for delivery":
-        return <Truck size={15} />;
-
-      default:
-        return <Clock size={15} />;
-    }
-  };
 
   /* =========================
      LOADING
@@ -289,9 +422,7 @@ function Deliveries() {
             className="delivery-loading-icon"
           />
 
-          <p>
-            Loading deliveries...
-          </p>
+          <p>Loading deliveries...</p>
         </div>
       </div>
     );
@@ -300,7 +431,9 @@ function Deliveries() {
   return (
     <div className="delivery-page">
 
-      {/* HEADER */}
+      {/* =========================
+          HEADER
+          ========================= */}
 
       <div className="delivery-header">
 
@@ -323,9 +456,7 @@ function Deliveries() {
         >
           <RefreshCw
             size={18}
-            className={
-              loading ? "spin" : ""
-            }
+            className={loading ? "spin" : ""}
           />
 
           Refresh
@@ -333,7 +464,9 @@ function Deliveries() {
 
       </div>
 
-      {/* ERROR */}
+      {/* =========================
+          ERROR
+          ========================= */}
 
       {error && (
         <div className="delivery-error">
@@ -341,9 +474,23 @@ function Deliveries() {
         </div>
       )}
 
-      {/* STATISTICS */}
+      {/* =========================
+          SUCCESS MESSAGE
+          ========================= */}
+
+      {statusMessage && (
+        <div className="delivery-success">
+          {statusMessage}
+        </div>
+      )}
+
+      {/* =========================
+          STATISTICS
+          ========================= */}
 
       <div className="delivery-stats">
+
+        {/* ASSIGNED */}
 
         <div className="delivery-stat-card">
 
@@ -352,11 +499,28 @@ function Deliveries() {
           </div>
 
           <div>
-            <p>Pending</p>
-            <h2>{pendingCount}</h2>
+            <p>Assigned</p>
+            <h2>{assignedCount}</h2>
           </div>
 
         </div>
+
+        {/* PICKED UP */}
+
+        <div className="delivery-stat-card">
+
+          <div className="delivery-stat-icon transit">
+            <PackageCheck size={22} />
+          </div>
+
+          <div>
+            <p>Picked Up</p>
+            <h2>{pickedUpCount}</h2>
+          </div>
+
+        </div>
+
+        {/* OUT FOR DELIVERY */}
 
         <div className="delivery-stat-card">
 
@@ -366,12 +530,12 @@ function Deliveries() {
 
           <div>
             <p>Out for Delivery</p>
-            <h2>
-              {outForDeliveryCount}
-            </h2>
+            <h2>{outForDeliveryCount}</h2>
           </div>
 
         </div>
+
+        {/* DELIVERED */}
 
         <div className="delivery-stat-card">
 
@@ -386,22 +550,11 @@ function Deliveries() {
 
         </div>
 
-        <div className="delivery-stat-card">
-
-          <div className="delivery-stat-icon cancelled">
-            <XCircle size={22} />
-          </div>
-
-          <div>
-            <p>Cancelled</p>
-            <h2>{cancelledCount}</h2>
-          </div>
-
-        </div>
-
       </div>
 
-      {/* MAIN CONTAINER */}
+      {/* =========================
+          MAIN CONTAINER
+          ========================= */}
 
       <div className="delivery-container">
 
@@ -428,9 +581,7 @@ function Deliveries() {
                 placeholder="Search delivery..."
                 value={search}
                 onChange={(e) =>
-                  setSearch(
-                    e.target.value
-                  )
+                  setSearch(e.target.value)
                 }
               />
 
@@ -440,17 +591,19 @@ function Deliveries() {
               className="delivery-filter"
               value={statusFilter}
               onChange={(e) =>
-                setStatusFilter(
-                  e.target.value
-                )
+                setStatusFilter(e.target.value)
               }
             >
               <option value="all">
                 All Status
               </option>
 
-              <option value="pending">
-                Pending
+              <option value="assigned">
+                Assigned
+              </option>
+
+              <option value="picked_up">
+                Picked Up
               </option>
 
               <option value="out_for_delivery">
@@ -460,17 +613,15 @@ function Deliveries() {
               <option value="delivered">
                 Delivered
               </option>
-
-              <option value="cancelled">
-                Cancelled
-              </option>
             </select>
 
           </div>
 
         </div>
 
-        {/* DELIVERY CARDS */}
+        {/* =========================
+            DELIVERY CARDS
+            ========================= */}
 
         <div className="delivery-grid">
 
@@ -499,13 +650,21 @@ function Deliveries() {
                 const status =
                   getStatus(delivery);
 
+                const deliveryId =
+                  getDeliveryId(delivery);
+
+                const nextStatus =
+                  getNextStatus(status);
+
+                const isUpdating =
+                  updatingId === deliveryId;
+
                 return (
                   <div
                     className="delivery-card"
                     key={
-                      getOrderId(
-                        delivery
-                      )
+                      deliveryId ||
+                      `${getOrderId(delivery)}-${index}`
                     }
                     style={{
                       animationDelay:
@@ -524,9 +683,7 @@ function Deliveries() {
                         </span>
 
                         <strong>
-                          #{getToken(
-                            delivery
-                          )}
+                          #{getToken(delivery)}
                         </strong>
 
                       </div>
@@ -538,9 +695,7 @@ function Deliveries() {
                           status={status}
                         />
 
-                        {statusLabel(
-                          status
-                        )}
+                        {statusLabel(status)}
                       </div>
 
                     </div>
@@ -555,16 +710,12 @@ function Deliveries() {
 
                       <div>
                         <strong>
-                          {getCustomer(
-                            delivery
-                          )}
+                          {getCustomer(delivery)}
                         </strong>
 
                         <span>
                           Order #
-                          {getOrderId(
-                            delivery
-                          ).slice(-8)}
+                          {getOrderId(delivery).slice(-8)}
                         </span>
                       </div>
 
@@ -580,9 +731,7 @@ function Deliveries() {
                         </span>
 
                         <strong>
-                          {getDeliveryPerson(
-                            delivery
-                          )}
+                          {getDeliveryPerson(delivery)}
                         </strong>
                       </div>
 
@@ -595,9 +744,7 @@ function Deliveries() {
                       <MapPin size={16} />
 
                       <span>
-                        {getAddress(
-                          delivery
-                        )}
+                        {getAddress(delivery)}
                       </span>
 
                     </div>
@@ -612,9 +759,7 @@ function Deliveries() {
                         </span>
 
                         <strong>
-                          {getDate(
-                            delivery
-                          )}
+                          {getDate(delivery)}
                         </strong>
                       </div>
 
@@ -626,12 +771,8 @@ function Deliveries() {
                         <strong>
                           ₹
                           {Number(
-                            getAmount(
-                              delivery
-                            )
-                          ).toLocaleString(
-                            "en-IN"
-                          )}
+                            getAmount(delivery)
+                          ).toLocaleString("en-IN")}
                         </strong>
                       </div>
 
@@ -642,9 +783,9 @@ function Deliveries() {
                             delivery
                           );
 
-                          setShowModal(
-                            true
-                          );
+                          setStatusMessage("");
+
+                          setShowModal(true);
                         }}
                       >
                         <Eye size={16} />
@@ -653,6 +794,63 @@ function Deliveries() {
                       </button>
 
                     </div>
+
+                    {/* NEXT STATUS ACTION */}
+
+                    {nextStatus && (
+                      <div className="delivery-card-action">
+
+                        <button
+                          className="delivery-status-action"
+                          disabled={isUpdating}
+                          onClick={() =>
+                            updateDeliveryStatus(
+                              delivery,
+                              nextStatus
+                            )
+                          }
+                        >
+                          {isUpdating ? (
+                            <>
+                              <RefreshCw
+                                size={15}
+                                className="spin"
+                              />
+
+                              Updating...
+                            </>
+                          ) : (
+                            <>
+                              {nextStatus === "picked_up" && (
+                                <PackageCheck size={15} />
+                              )}
+
+                              {nextStatus === "out_for_delivery" && (
+                                <Truck size={15} />
+                              )}
+
+                              {nextStatus === "delivered" && (
+                                <CheckCircle size={15} />
+                              )}
+
+                              Mark as{" "}
+                              {statusLabel(nextStatus)}
+
+                              <ArrowRight size={15} />
+                            </>
+                          )}
+                        </button>
+
+                      </div>
+                    )}
+
+                    {status === "delivered" && (
+                      <div className="delivery-completed-message">
+                        <CheckCircle size={15} />
+
+                        Delivery completed
+                      </div>
+                    )}
 
                   </div>
                 );
@@ -665,7 +863,9 @@ function Deliveries() {
 
       </div>
 
-      {/* MODAL */}
+      {/* =========================
+          MODAL
+          ========================= */}
 
       {showModal &&
         selectedDelivery && (
@@ -684,6 +884,8 @@ function Deliveries() {
               }
             >
 
+              {/* MODAL HEADER */}
+
               <div className="delivery-modal-header">
 
                 <div className="delivery-modal-title">
@@ -699,9 +901,7 @@ function Deliveries() {
 
                     <h2>
                       Token #
-                      {getToken(
-                        selectedDelivery
-                      )}
+                      {getToken(selectedDelivery)}
                     </h2>
                   </div>
 
@@ -710,15 +910,15 @@ function Deliveries() {
                 <button
                   className="delivery-modal-close"
                   onClick={() =>
-                    setShowModal(
-                      false
-                    )
+                    setShowModal(false)
                   }
                 >
                   <X size={20} />
                 </button>
 
               </div>
+
+              {/* MODAL BODY */}
 
               <div className="delivery-modal-body">
 
@@ -728,9 +928,7 @@ function Deliveries() {
                   </span>
 
                   <strong>
-                    {getCustomer(
-                      selectedDelivery
-                    )}
+                    {getCustomer(selectedDelivery)}
                   </strong>
                 </div>
 
@@ -740,9 +938,7 @@ function Deliveries() {
                   </span>
 
                   <strong>
-                    {getOrderId(
-                      selectedDelivery
-                    )}
+                    {getOrderId(selectedDelivery)}
                   </strong>
                 </div>
 
@@ -752,9 +948,7 @@ function Deliveries() {
                   </span>
 
                   <strong>
-                    {getDeliveryPerson(
-                      selectedDelivery
-                    )}
+                    {getDeliveryPerson(selectedDelivery)}
                   </strong>
                 </div>
 
@@ -764,9 +958,7 @@ function Deliveries() {
                   </span>
 
                   <strong>
-                    {getAddress(
-                      selectedDelivery
-                    )}
+                    {getAddress(selectedDelivery)}
                   </strong>
                 </div>
 
@@ -778,12 +970,8 @@ function Deliveries() {
                   <strong>
                     ₹
                     {Number(
-                      getAmount(
-                        selectedDelivery
-                      )
-                    ).toLocaleString(
-                      "en-IN"
-                    )}
+                      getAmount(selectedDelivery)
+                    ).toLocaleString("en-IN")}
                   </strong>
                 </div>
 
@@ -793,11 +981,11 @@ function Deliveries() {
                   </span>
 
                   <strong>
-                    {getDate(
-                      selectedDelivery
-                    )}
+                    {getDate(selectedDelivery)}
                   </strong>
                 </div>
+
+                {/* STATUS */}
 
                 <div className="delivery-detail-status">
 
@@ -817,13 +1005,85 @@ function Deliveries() {
                     />
 
                     {statusLabel(
-                      getStatus(
-                        selectedDelivery
-                      )
+                      getStatus(selectedDelivery)
                     )}
                   </div>
 
                 </div>
+
+                {/* MODAL STATUS ACTION */}
+
+                {getNextStatus(
+                  getStatus(selectedDelivery)
+                ) && (
+
+                  <div className="delivery-modal-action">
+
+                    <p>
+                      Next Step
+                    </p>
+
+                    <button
+                      className="delivery-status-action modal-action"
+                      disabled={
+                        updatingId ===
+                        getDeliveryId(
+                          selectedDelivery
+                        )
+                      }
+                      onClick={() =>
+                        updateDeliveryStatus(
+                          selectedDelivery,
+                          getNextStatus(
+                            getStatus(
+                              selectedDelivery
+                            )
+                          )!
+                        )
+                      }
+                    >
+                      {updatingId ===
+                      getDeliveryId(
+                        selectedDelivery
+                      ) ? (
+                        <>
+                          <RefreshCw
+                            size={15}
+                            className="spin"
+                          />
+
+                          Updating...
+                        </>
+                      ) : (
+                        <>
+                          Mark as{" "}
+                          {statusLabel(
+                            getNextStatus(
+                              getStatus(
+                                selectedDelivery
+                              )
+                            )!
+                          )}
+
+                          <ArrowRight size={15} />
+                        </>
+                      )}
+                    </button>
+
+                  </div>
+                )}
+
+                {getStatus(
+                  selectedDelivery
+                ) === "delivered" && (
+
+                  <div className="delivery-completed-message modal-completed">
+                    <CheckCircle size={16} />
+
+                    Delivery completed successfully
+                  </div>
+
+                )}
 
               </div>
 

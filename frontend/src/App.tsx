@@ -18,6 +18,7 @@ import Feedback from "./pages/Feedback";
 import AIAnalysis from "./pages/AIAnalysis";
 import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
+import Foods from "./pages/Foods";
 
 function App() {
   return (
@@ -45,7 +46,7 @@ function App() {
             path="/restaurants"
             element={<Restaurants />}
           />
-
+        <Route path="/foods" element={<Foods />} />
           <Route
             path="/kitchen"
             element={<Kitchen />}
