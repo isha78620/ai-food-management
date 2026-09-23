@@ -15,6 +15,7 @@ import {
   BarChart3,
 } from "lucide-react";
 
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 interface SidebarProps {
@@ -23,6 +24,8 @@ interface SidebarProps {
 }
 
 function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
   const menuItems = [
     {
       name: "Dashboard",
@@ -39,7 +42,6 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
       path: "/restaurants",
       icon: Store,
     },
-
     {
       name: "Foods",
       icon: Utensils,
@@ -76,15 +78,22 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
       icon: Bot,
     },
     {
-  name: "Analytics", 
-  path: "/analytics", 
-  icon: BarChart3, 
-},
+      name: "Analytics",
+      path: "/analytics",
+      icon: BarChart3,
+    },
   ];
+
+  const handleLogout = () => {
+    setShowLogoutModal(false);
+
+    // Real authentication logout will be connected here later.
+    console.log("Logout clicked");
+  };
 
   return (
     <>
-      {/* Mobile Overlay */}
+      {/* ================= MOBILE OVERLAY ================= */}
       {isOpen && (
         <div
           className="sidebar-overlay"
@@ -92,6 +101,7 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
         />
       )}
 
+      {/* ================= SIDEBAR ================= */}
       <aside
         className={`sidebar ${
           isOpen ? "sidebar-open" : ""
@@ -107,8 +117,8 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
           </div>
 
           <div className="logo-text">
-            <h2>AI Food</h2>
-            <span>Management</span>
+            <h2>Smart </h2>
+            <span>FoodCourt</span>
           </div>
 
           {/* Mobile Close */}
@@ -144,7 +154,10 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
                     }`
                   }
                 >
-                  <Icon size={19} strokeWidth={2} />
+                  <Icon
+                    size={19}
+                    strokeWidth={2}
+                  />
 
                   <span>{item.name}</span>
                 </NavLink>
@@ -155,6 +168,8 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* ================= BOTTOM MENU ================= */}
         <div className="sidebar-bottom">
+
+          {/* SETTINGS */}
           <NavLink
             to="/settings"
             onClick={onClose}
@@ -166,16 +181,79 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
               }`
             }
           >
-            <Settings size={19} strokeWidth={2} />
+            <Settings
+              size={19}
+              strokeWidth={2}
+            />
+
             <span>Settings</span>
           </NavLink>
 
-          <button className="sidebar-logout">
-            <LogOut size={19} strokeWidth={2} />
+          {/* LOGOUT */}
+          <button
+            className="sidebar-logout"
+            onClick={() => setShowLogoutModal(true)}
+          >
+            <LogOut
+              size={19}
+              strokeWidth={2}
+            />
+
             <span>Logout</span>
           </button>
         </div>
       </aside>
+
+      {/* ================= LOGOUT MODAL ================= */}
+      {showLogoutModal && (
+        <div
+          className="logout-overlay"
+          onClick={() => setShowLogoutModal(false)}
+        >
+          <div
+            className="logout-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            {/* ICON */}
+            <div className="logout-icon">
+              <LogOut size={24} />
+            </div>
+
+            {/* TITLE */}
+            <h2>Logout?</h2>
+
+            {/* MESSAGE */}
+            <p>
+              Are you sure you want to logout
+              from your account?
+            </p>
+
+            {/* BUTTONS */}
+            <div className="logout-actions">
+
+              <button
+                type="button"
+                className="logout-cancel"
+                onClick={() =>
+                  setShowLogoutModal(false)
+                }
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="logout-confirm"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

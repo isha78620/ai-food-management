@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from app.db_config import db
 from datetime import datetime, timedelta
+from fastapi import APIRouter, HTTPException
+from bson import ObjectId
 
 router = APIRouter(
     prefix="/api/admin",
@@ -11,6 +13,7 @@ orders_collection = db["orders"]
 deliveries_collection = db["deliveries"]
 inventory_collection = db["inventory"]
 ingredients_collection = db["ingredients"]
+notifications_collection = db["notifications"]
 
 
 @router.get("/dashboard")
@@ -414,3 +417,80 @@ def monthly_sales():
         })
 
     return monthly_data
+
+
+# ==============================
+# ADMIN - LIVE NOTIFICATIONS
+# ==============================
+
+@router.get("/notifications")
+def get_notifications():
+    try:
+        notifications = list(
+            notifications_collection
+            .find({})
+            .sort("createdAt", -1)
+            .limit(20)
+        )
+
+        for notification in notifications:
+            notification["_id"] = str(notification["_id"])
+
+        unread_count = notifications_collection.count_documents({
+            "read": False
+        })
+
+        return {
+            "notifications": notifications,
+            "unreadCount": unread_count
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to fetch notifications: {str(e)}"
+        )
+
+
+@router.patch("/notifications/{notification_id}/read")
+def mark_notification_read(notification_id: str):
+    try:
+        result = notifications_collection.update_one(
+            {"_id": ObjectId(notification_id)},
+            {"$set": {"read": True}}
+        )
+
+        if result.matched_count == 0:
+            raise HTTPException(
+                status_code=404,
+                detail="Notification not found"
+            )
+
+        return {
+            "message": "Notification marked as read"
+        }
+
+    except Exception:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid notification ID"
+        )
+
+
+@router.patch("/notifications/read-all")
+def mark_all_notifications_read():
+    try:
+        notifications_collection.update_many(
+            {"read": False},
+            {"$set": {"read": True}}
+        )
+
+        return {
+            "message": "All notifications marked as read"
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to update notifications: {str(e)}"
+        )
