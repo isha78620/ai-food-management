@@ -15849,3 +15849,735 @@ html.dark-mode ::selection {
       #19100d !important;
   }
 }
+
+
+
+
+/* new */
+
+
+
+/* =========================================================
+   SMART FOODCOURT
+   FOODS PAGE - FINAL DARK MODE
+   ORANGE + BLACK PREMIUM THEME
+   ========================================================= */
+
+html.dark-mode .foods-page {
+  background: transparent !important;
+  color: #fff8f1 !important;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+html.dark-mode .foods-page .page-title-row {
+  color: #fff8f1 !important;
+}
+
+html.dark-mode .foods-page .page-title-row h1 {
+  color: #ffffff !important;
+}
+
+html.dark-mode .foods-page .page-title-row p {
+  color: #aF9a90 !important;
+}
+
+html.dark-mode .foods-page .page-title-icon {
+  background: linear-gradient(
+    135deg,
+    #3a2116,
+    #2a1710
+  ) !important;
+
+  color: #e9c46a !important;
+
+  border: 1px solid #5a3626 !important;
+
+  box-shadow:
+    0 8px 22px rgba(217, 99, 59, 0.12) !important;
+}
+
+/* =========================================================
+   PAGE ACTION BUTTONS
+   ========================================================= */
+
+html.dark-mode .foods-page .primary-action-button {
+  background: linear-gradient(
+    135deg,
+    #e06a3f,
+    #c94f2d
+  ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #e06a3f !important;
+
+  box-shadow:
+    0 7px 20px rgba(217, 99, 59, 0.20) !important;
+}
+
+html.dark-mode .foods-page .primary-action-button:hover {
+  background: linear-gradient(
+    135deg,
+    #ef7b4e,
+    #d95b35
+  ) !important;
+
+  transform: translateY(-2px) !important;
+
+  box-shadow:
+    0 10px 25px rgba(217, 99, 59, 0.30) !important;
+}
+
+html.dark-mode .foods-page .secondary-action-button {
+  background: #1c1210 !important;
+
+  color: #f6e8df !important;
+
+  border: 1px solid #493027 !important;
+
+  box-shadow:
+    0 5px 16px rgba(0, 0, 0, 0.20) !important;
+}
+
+html.dark-mode .foods-page .secondary-action-button svg {
+  color: #e9c46a !important;
+}
+
+html.dark-mode .foods-page .secondary-action-button:hover {
+  background: #2a1712 !important;
+
+  color: #ffffff !important;
+
+  border-color: #d9633b !important;
+
+  transform: translateY(-2px) !important;
+}
+
+/* =========================================================
+   ERROR MESSAGE
+   ========================================================= */
+
+html.dark-mode .foods-page .food-error-message {
+  background: rgba(185, 57, 48, 0.13) !important;
+
+  color: #ff8d84 !important;
+
+  border: 1px solid rgba(223, 91, 85, 0.35) !important;
+}
+
+html.dark-mode .foods-page .food-error-message button {
+  color: #ff8d84 !important;
+}
+
+/* =========================================================
+   FOOD STATISTICS
+   ========================================================= */
+
+html.dark-mode .foods-page .food-stats-grid {
+  background: transparent !important;
+}
+
+html.dark-mode .foods-page .food-stat-card {
+  background: linear-gradient(
+    145deg,
+    #211411,
+    #18100d
+  ) !important;
+
+  border: 1px solid #3d2922 !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.30) !important;
+}
+
+html.dark-mode .foods-page .food-stat-card:hover {
+  transform: translateY(-3px) !important;
+
+  border-color: #70402e !important;
+
+  box-shadow:
+    0 12px 32px rgba(217, 99, 59, 0.12) !important;
+}
+
+html.dark-mode .foods-page .food-stat-card span {
+  color: #aF9a90 !important;
+}
+
+html.dark-mode .foods-page .food-stat-card strong {
+  color: #ffffff !important;
+}
+
+/* Statistic icons */
+
+html.dark-mode .foods-page .food-stat-icon {
+  background: rgba(233, 196, 106, 0.14) !important;
+
+  color: #e9c46a !important;
+
+  border: 1px solid rgba(233, 196, 106, 0.12) !important;
+}
+
+html.dark-mode .foods-page .food-stat-icon.available {
+  background: rgba(127, 176, 105, 0.14) !important;
+
+  color: #9bd37f !important;
+}
+
+html.dark-mode .foods-page .food-stat-icon.unavailable {
+  background: rgba(223, 91, 85, 0.14) !important;
+
+  color: #ff817a !important;
+}
+
+html.dark-mode .foods-page .food-stat-icon.category {
+  background: rgba(217, 99, 59, 0.14) !important;
+
+  color: #ef8a5e !important;
+}
+
+/* =========================================================
+   SEARCH / FILTER TOOLBAR
+   ========================================================= */
+
+html.dark-mode .foods-page .food-toolbar {
+  background: linear-gradient(
+    145deg,
+    #1d1310,
+    #17100d
+  ) !important;
+
+  border: 1px solid #3d2922 !important;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Search box */
+
+html.dark-mode .foods-page .food-search {
+  background: #120c0a !important;
+
+  border: 1px solid #493027 !important;
+
+  color: #9e8a80 !important;
+}
+
+html.dark-mode .foods-page .food-search svg {
+  color: #aF9a90 !important;
+}
+
+html.dark-mode .foods-page .food-search:focus-within {
+  border-color: #d9633b !important;
+
+  box-shadow:
+    0 0 0 3px rgba(217, 99, 59, 0.12) !important;
+}
+
+html.dark-mode .foods-page .food-search input {
+  background: transparent !important;
+
+  color: #ffffff !important;
+
+  border: none !important;
+
+  outline: none !important;
+}
+
+html.dark-mode .foods-page .food-search input::placeholder {
+  color: #725f56 !important;
+}
+
+/* Select */
+
+html.dark-mode .foods-page .food-toolbar select {
+  background: #120c0a !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #493027 !important;
+
+  outline: none !important;
+}
+
+html.dark-mode .foods-page .food-toolbar select:hover {
+  border-color: #70402e !important;
+}
+
+html.dark-mode .foods-page .food-toolbar select:focus {
+  border-color: #d9633b !important;
+
+  box-shadow:
+    0 0 0 3px rgba(217, 99, 59, 0.12) !important;
+}
+
+html.dark-mode .foods-page .food-toolbar select option {
+  background: #1b1210 !important;
+
+  color: #ffffff !important;
+}
+
+/* =========================================================
+   FOOD GRID
+   ========================================================= */
+
+html.dark-mode .foods-page .food-grid {
+  background: transparent !important;
+}
+
+/* =========================================================
+   FOOD CARD
+   ========================================================= */
+
+html.dark-mode .foods-page .food-card {
+  background: linear-gradient(
+    145deg,
+    #211411,
+    #18100d
+  ) !important;
+
+  border: 1px solid #3d2922 !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.30) !important;
+}
+
+html.dark-mode .foods-page .food-card:hover {
+  transform: translateY(-5px) !important;
+
+  border-color: #74412e !important;
+
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(217, 99, 59, 0.08) !important;
+}
+
+/* Food card top */
+
+html.dark-mode .foods-page .food-card-top {
+  background: linear-gradient(
+    135deg,
+    #2a1812,
+    #1d110e
+  ) !important;
+
+  border-bottom: 1px solid #35231d !important;
+}
+
+/* Food placeholder */
+
+html.dark-mode .foods-page .food-placeholder {
+  background: linear-gradient(
+    135deg,
+    #3d2815,
+    #2a1b10
+  ) !important;
+
+  color: #e9c46a !important;
+
+  border: 1px solid rgba(233, 196, 106, 0.16) !important;
+}
+
+/* Availability */
+
+html.dark-mode .foods-page .food-availability.available {
+  background: rgba(127, 176, 105, 0.16) !important;
+
+  color: #a6d68a !important;
+
+  border: 1px solid rgba(127, 176, 105, 0.20) !important;
+}
+
+html.dark-mode .foods-page .food-availability.unavailable {
+  background: rgba(223, 91, 85, 0.15) !important;
+
+  color: #ff817a !important;
+
+  border: 1px solid rgba(223, 91, 85, 0.20) !important;
+}
+
+/* Food content */
+
+html.dark-mode .foods-page .food-card-content {
+  background: transparent !important;
+}
+
+html.dark-mode .foods-page .food-card-heading h3 {
+  color: #ffffff !important;
+}
+
+html.dark-mode .foods-page .food-category {
+  background: rgba(233, 196, 106, 0.12) !important;
+
+  color: #e9c46a !important;
+
+  border: 1px solid rgba(233, 196, 106, 0.10) !important;
+}
+
+html.dark-mode .foods-page .food-price {
+  color: #e9c46a !important;
+}
+
+html.dark-mode .foods-page .food-description {
+  color: #aF9a90 !important;
+}
+
+html.dark-mode .foods-page .food-restaurant {
+  border-top: 1px solid #35241e !important;
+}
+
+html.dark-mode .foods-page .food-restaurant span {
+  color: #78665e !important;
+}
+
+html.dark-mode .foods-page .food-restaurant strong {
+  color: #e5d5cd !important;
+}
+
+/* =========================================================
+   FOOD CARD BUTTONS
+   ========================================================= */
+
+html.dark-mode .foods-page .food-card-actions {
+  background: transparent !important;
+}
+
+html.dark-mode .foods-page .food-view-button {
+  background: #2a1a15 !important;
+
+  color: #eadbd3 !important;
+
+  border: 1px solid #493027 !important;
+}
+
+html.dark-mode .foods-page .food-view-button svg {
+  color: #e9c46a !important;
+}
+
+html.dark-mode .foods-page .food-edit-button {
+  background: rgba(233, 196, 106, 0.13) !important;
+
+  color: #e9c46a !important;
+
+  border: 1px solid rgba(233, 196, 106, 0.18) !important;
+}
+
+html.dark-mode .foods-page .food-edit-button svg {
+  color: #e9c46a !important;
+}
+
+html.dark-mode .foods-page .food-delete-button {
+  background: rgba(223, 91, 85, 0.12) !important;
+
+  color: #ff817a !important;
+
+  border: 1px solid rgba(223, 91, 85, 0.18) !important;
+}
+
+html.dark-mode .foods-page .food-delete-button svg {
+  color: #ff817a !important;
+}
+
+html.dark-mode .foods-page .food-view-button:hover {
+  background: #352018 !important;
+
+  border-color: #6b4232 !important;
+
+  color: #ffffff !important;
+}
+
+html.dark-mode .foods-page .food-edit-button:hover {
+  background: rgba(233, 196, 106, 0.22) !important;
+
+  transform: translateY(-2px) !important;
+}
+
+html.dark-mode .foods-page .food-delete-button:hover {
+  background: rgba(223, 91, 85, 0.20) !important;
+
+  transform: translateY(-2px) !important;
+}
+
+/* =========================================================
+   LOADING / EMPTY
+   ========================================================= */
+
+html.dark-mode .foods-page .food-loading,
+html.dark-mode .foods-page .food-empty {
+  background: linear-gradient(
+    145deg,
+    #211411,
+    #18100d
+  ) !important;
+
+  border: 1px solid #3d2922 !important;
+
+  color: #aF9a90 !important;
+}
+
+html.dark-mode .foods-page .food-loading svg,
+html.dark-mode .foods-page .food-empty svg {
+  color: #e9c46a !important;
+}
+
+html.dark-mode .foods-page .food-loading p,
+html.dark-mode .foods-page .food-empty p {
+  color: #aF9a90 !important;
+}
+
+html.dark-mode .foods-page .food-empty h3 {
+  color: #ffffff !important;
+}
+
+/* =========================================================
+   FOOD MODAL
+   ========================================================= */
+
+html.dark-mode .food-modal-overlay {
+  background: rgba(0, 0, 0, 0.78) !important;
+
+  backdrop-filter: blur(6px) !important;
+}
+
+html.dark-mode .foods-page .food-modal,
+html.dark-mode .foods-page .food-view-modal {
+  background: linear-gradient(
+    145deg,
+    #211411,
+    #17100d
+  ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #493027 !important;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Modal header */
+
+html.dark-mode .foods-page .food-modal-header {
+  border-bottom: 1px solid #3d2922 !important;
+}
+
+html.dark-mode .foods-page .food-modal-header h2 {
+  color: #ffffff !important;
+}
+
+html.dark-mode .foods-page .food-modal-header p {
+  color: #aF9a90 !important;
+}
+
+html.dark-mode .foods-page .food-modal-close {
+  background: #2a1914 !important;
+
+  color: #d8c7bf !important;
+
+  border: 1px solid #493027 !important;
+}
+
+html.dark-mode .foods-page .food-modal-close:hover {
+  background: #d9633b !important;
+
+  color: #ffffff !important;
+
+  border-color: #d9633b !important;
+}
+
+/* =========================================================
+   FOOD FORM
+   ========================================================= */
+
+html.dark-mode .foods-page .food-form {
+  background: transparent !important;
+}
+
+html.dark-mode .foods-page .food-form-group label {
+  color: #e5d5cd !important;
+}
+
+html.dark-mode .foods-page .food-form-group input,
+html.dark-mode .foods-page .food-form-group textarea {
+  background: #120c0a !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #493027 !important;
+}
+
+html.dark-mode .foods-page .food-form-group input::placeholder,
+html.dark-mode .foods-page .food-form-group textarea::placeholder {
+  color: #725f56 !important;
+}
+
+html.dark-mode .foods-page .food-form-group input:focus,
+html.dark-mode .foods-page .food-form-group textarea:focus {
+  background: #17100d !important;
+
+  border-color: #d9633b !important;
+
+  box-shadow:
+    0 0 0 3px rgba(217, 99, 59, 0.13) !important;
+}
+
+/* Availability toggle */
+
+html.dark-mode .foods-page .food-availability-toggle {
+  background: #241611 !important;
+
+  color: #d8c7bf !important;
+
+  border: 1px solid #3d2922 !important;
+}
+
+html.dark-mode .foods-page .food-availability-toggle input {
+  accent-color: #d9633b !important;
+}
+
+/* Form buttons */
+
+html.dark-mode .foods-page .food-cancel-button {
+  background: #2a1914 !important;
+
+  color: #d8c7bf !important;
+
+  border: 1px solid #493027 !important;
+}
+
+html.dark-mode .foods-page .food-cancel-button:hover {
+  background: #352018 !important;
+
+  color: #ffffff !important;
+}
+
+html.dark-mode .foods-page .food-save-button {
+  background: linear-gradient(
+    135deg,
+    #d9633b,
+    #b84b2b
+  ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #d9633b !important;
+
+  box-shadow:
+    0 7px 20px rgba(217, 99, 59, 0.20) !important;
+}
+
+html.dark-mode .foods-page .food-save-button:hover {
+  background: linear-gradient(
+    135deg,
+    #ef744b,
+    #d9633b
+  ) !important;
+}
+
+/* =========================================================
+   VIEW FOOD MODAL
+   ========================================================= */
+
+html.dark-mode .foods-page .food-detail-content {
+  background: transparent !important;
+}
+
+html.dark-mode .foods-page .food-detail-icon {
+  background: linear-gradient(
+    135deg,
+    #3d2815,
+    #2a1b10
+  ) !important;
+
+  color: #e9c46a !important;
+
+  border: 1px solid rgba(233, 196, 106, 0.15) !important;
+}
+
+html.dark-mode .foods-page .food-detail-price {
+  color: #e9c46a !important;
+}
+
+html.dark-mode .foods-page .food-detail-section {
+  border-top: 1px solid #3d2922 !important;
+}
+
+html.dark-mode .foods-page .food-detail-section > span {
+  color: #78665e !important;
+}
+
+html.dark-mode .foods-page .food-detail-section strong {
+  color: #ffffff !important;
+}
+
+html.dark-mode .foods-page .food-detail-section p {
+  color: #b9a79e !important;
+}
+
+html.dark-mode .foods-page .food-view-actions {
+  background: transparent !important;
+
+  border-top: 1px solid #3d2922 !important;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  html.dark-mode .foods-page .food-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  html.dark-mode .foods-page .food-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  html.dark-mode .foods-page .food-toolbar {
+    flex-wrap: wrap !important;
+  }
+
+  html.dark-mode .foods-page .food-search {
+    min-width: 100% !important;
+  }
+}
+
+@media (max-width: 600px) {
+
+  html.dark-mode .foods-page .food-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  html.dark-mode .foods-page .food-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  html.dark-mode .foods-page .page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  html.dark-mode .foods-page .page-header-actions {
+    width: 100% !important;
+  }
+
+  html.dark-mode .foods-page .page-header-actions button {
+    flex: 1 !important;
+  }
+
+  html.dark-mode .foods-page .food-toolbar select {
+    min-height: 44px !important;
+    width: 100% !important;
+  }
+
+  html.dark-mode .foods-page .food-form-row {
+    grid-template-columns: 1fr !important;
+  }
+}
